@@ -1,0 +1,6 @@
+# root .gitignore
+.env
+.DS_Store
+*.log
+.idea/
+*.iml
