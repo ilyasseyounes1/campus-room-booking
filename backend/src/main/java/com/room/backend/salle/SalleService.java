@@ -6,6 +6,8 @@ import com.room.backend.salle.dto.SalleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -27,11 +29,21 @@ public class SalleService {
         return SalleResponse.from(salle) ;
     }
 
-    public List<SalleResponse> getAvailable () {
-        return salleRepository. findByDisponibleTrue()
-                .stream( )
+    public List<SalleResponse> getAvailable(LocalDate date, LocalTime heureDebut, LocalTime heureFin) {
+        if (date == null && heureDebut == null && heureFin == null) {
+            return salleRepository.findByDisponibleTrue().stream()
+                    .map(SalleResponse::from)
+                    .toList();
+        }
+        if (date == null || heureDebut == null || heureFin == null) {
+            throw new RuntimeException("date, heureDebut and heureFin are all required together");
+        }
+        if (!heureDebut.isBefore(heureFin)) {
+            throw new RuntimeException("heureDebut must be before heureFin");
+        }
+        return salleRepository.findAvailableForSlot(date, heureDebut, heureFin).stream()
                 .map(SalleResponse::from)
-                .toList()   ;
+                .toList();
     }
 
     public SalleResponse create(SalleRequest request) {
