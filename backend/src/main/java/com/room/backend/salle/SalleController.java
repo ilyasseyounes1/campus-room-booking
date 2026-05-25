@@ -4,10 +4,13 @@ package com.room.backend.salle;
 import com.room.backend.salle.dto.SalleRequest;
 import com.room.backend.salle.dto.SalleResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -29,8 +32,11 @@ public class SalleController {
     }
 
     @GetMapping("/disponibles")
-    public ResponseEntity<List<SalleResponse>  > getAvailable( ) {
-        return ResponseEntity.ok(salleService. getAvailable( ))  ;
+    public ResponseEntity<List<SalleResponse>> getAvailable(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime debut,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime fin) {
+        return ResponseEntity.ok(salleService.getAvailable(date, debut, fin));
     }
 
     @PostMapping
