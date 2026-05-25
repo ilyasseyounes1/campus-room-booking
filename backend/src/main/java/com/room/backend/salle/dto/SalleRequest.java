@@ -1,4 +1,12 @@
 package com.room.backend.salle.dto;
 
-public class SalleRequest{
+
+import lombok.Data;
+
+@Data
+public class SalleRequest {
+    private String nom ;
+    private int capacite;
+    private String  localisation;
+    private boolean disponible ;
 }
